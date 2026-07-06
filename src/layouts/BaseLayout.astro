@@ -1,0 +1,30 @@
+---
+import SiteHeader from "../components/SiteHeader.astro";
+import "../styles/global.css";
+
+const {
+  title = "Thomas Verrill",
+  description = "The personal website and archive of Thomas Verrill.",
+  navItems = [],
+  showHeader = true,
+} = Astro.props;
+
+const pageTitle =
+  title === "Thomas Verrill" ? title : `${title} / Thomas Verrill`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    {showHeader && <SiteHeader items={navItems} />}
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>

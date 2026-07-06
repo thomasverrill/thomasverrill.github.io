@@ -1,0 +1,31 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const navItems = [
+  {
+    label: "linkedin",
+    href: "https://www.linkedin.com/in/thomas-verrill/",
+    external: true,
+  },
+  { label: "quantum", href: "/quantum" },
+  { label: "music", href: "/music" },
+  { label: "recommendations", href: "/recommendations" },
+  { label: "things to do", href: "/things-to-do" },
+  { label: "projects", href: "/projects" },
+];
+---
+
+<BaseLayout navItems={navItems}>
+  <div class="intro">
+    <p>
+      I'm Thomas Verrill, a quantum engineer at Rigetti Computing working 
+      on improving the performance of large-scale quantum processors through chip design and simulation. 
+      I previously worked on superconducting qubit coherence in Andrew Houck's lab at Princeton University, where
+      I received my undergraduate and masters degree in electrical and computer engineering. 
+    </p>
+    <p>
+      Outside of that, I perform and compose music on guitar and trombone, listen to a lot of jazz and experimental
+      rock, and read a lot. 
+    </p>
+  </div>
+</BaseLayout>

@@ -1,0 +1,13 @@
+---
+const { items = [] } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <nav class="page-nav" aria-label="Page navigation">
+      {items.map((item) => (
+        <a href={item.href}>{item.label}</a>
+      ))}
+    </nav>
+  )
+}

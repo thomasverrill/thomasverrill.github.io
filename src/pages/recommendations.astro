@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageNav from "../components/PageNav.astro";
+
+const sections = ["books", "music", "tv shows", "movies"];
+---
+
+<BaseLayout
+  title="Recommendations"
+  description="Recommendations archive from Thomas Verrill."
+  showHeader={false}
+>
+  <PageNav
+    items={[
+      { label: "home", href: "/" },
+      { label: "books", href: "#books" },
+      { label: "music", href: "#music" },
+      { label: "tv shows", href: "#tv-shows" },
+      { label: "movies", href: "#movies" },
+    ]}
+  />
+
+  <h1>recommendations</h1>
+
+  {
+    sections.map((section) => {
+      const id = section.toLowerCase().replaceAll(" ", "-");
+      return (
+        <section id={id} aria-labelledby={`${id}-heading`}>
+          <h2 id={`${id}-heading`}>{section}</h2>
+          <div class="empty-section" aria-hidden="true"></div>
+        </section>
+      );
+    })
+  }
+</BaseLayout>

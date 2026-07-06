@@ -1,0 +1,24 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageNav from "../components/PageNav.astro";
+---
+
+<BaseLayout
+  title="Quantum"
+  description="Quantum notes and work from Thomas Verrill."
+  showHeader={false}
+>
+  <PageNav
+    items={[
+      { label: "home", href: "/" },
+      { label: "experience", href: "#experience" },
+    ]}
+  />
+
+  <h1>quantum</h1>
+
+  <section id="experience" aria-labelledby="experience-heading">
+    <h2 id="experience-heading">experience</h2>
+    <div class="empty-section" aria-hidden="true"></div>
+  </section>
+</BaseLayout>

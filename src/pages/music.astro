@@ -1,0 +1,24 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageNav from "../components/PageNav.astro";
+---
+
+<BaseLayout
+  title="Music"
+  description="Music notes and archive from Thomas Verrill."
+  showHeader={false}
+>
+  <PageNav
+    items={[
+      { label: "home", href: "/" },
+      { label: "listening", href: "#listening" },
+    ]}
+  />
+
+  <h1>music</h1>
+
+  <section id="listening" aria-labelledby="listening-heading">
+    <h2 id="listening-heading">listening</h2>
+    <div class="empty-section" aria-hidden="true"></div>
+  </section>
+</BaseLayout>

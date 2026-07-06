@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageNav from "../components/PageNav.astro";
+
+const sections = ["philadelphia"];
+---
+
+<BaseLayout
+  title="Things to Do"
+  description="Location notes and things to do from Thomas Verrill."
+  showHeader={false}
+>
+  <PageNav
+    items={[
+      { label: "home", href: "/" },
+      { label: "philadelphia", href: "#philadelphia" },
+    ]}
+  />
+
+  <h1>things to do</h1>
+
+  {
+    sections.map((section) => {
+      const id = section.toLowerCase().replaceAll(" ", "-");
+      return (
+        <section id={id} aria-labelledby={`${id}-heading`}>
+          <h2 id={`${id}-heading`}>{section}</h2>
+          <ul class="archive-list" aria-label={`${section} entries`}></ul>
+        </section>
+      );
+    })
+  }
+</BaseLayout>
