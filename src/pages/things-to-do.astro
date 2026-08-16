@@ -1,8 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageNav from "../components/PageNav.astro";
-
-const sections = ["philadelphia"];
 ---
 
 <BaseLayout
@@ -13,21 +11,29 @@ const sections = ["philadelphia"];
   <PageNav
     items={[
       { label: "home", href: "/" },
+      { label: "ireland", href: "#ireland" },
       { label: "philadelphia", href: "#philadelphia" },
     ]}
   />
 
   <h1>things to do</h1>
 
-  {
-    sections.map((section) => {
-      const id = section.toLowerCase().replaceAll(" ", "-");
-      return (
-        <section id={id} aria-labelledby={`${id}-heading`}>
-          <h2 id={`${id}-heading`}>{section}</h2>
-          <ul class="archive-list" aria-label={`${section} entries`}></ul>
-        </section>
-      );
-    })
-  }
+  <section id="ireland" aria-labelledby="ireland-heading">
+    <h2 id="ireland-heading">ireland</h2>
+    <ul class="archive-list" aria-label="ireland entries">
+      <li>
+        <a href="https://doolincliffwalk.com/">cliffs of moher walk with pat sweeney</a>
+        <p class="section-note">
+          the best way to experience the cliffs of moher. reach normally
+          unavailable areas and sights with an excellent tour guide who owns
+          much of the land.
+        </p>
+      </li>
+    </ul>
+  </section>
+
+  <section id="philadelphia" aria-labelledby="philadelphia-heading">
+    <h2 id="philadelphia-heading">philadelphia</h2>
+    <ul class="archive-list" aria-label="philadelphia entries"></ul>
+  </section>
 </BaseLayout>
