@@ -1,0 +1,26 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageNav from "../components/PageNav.astro";
+---
+
+<BaseLayout
+  title="about"
+  description="about thomas verrill."
+  showHeader={false}
+>
+  <PageNav items={[{ label: "home", href: "/" }]} />
+
+  <h1>about</h1>
+
+  <div class="intro">
+    <p>
+      hi! i'm thomas verrill, a quantum engineer at <a href="https://www.rigetti.com/">rigetti computing</a> designing chips for superconducting quantum computers.
+      i previously researched qubit coherence in <a href="https://houcklab.princeton.edu/">andrew houck's lab</a> at princeton university, where
+      i received an undergraduate and masters degree in electrical and computer engineering.
+    </p>
+    <p>
+      outside of that, i like to make music on guitar/trombone/computer, listen to jazz/experimental
+      rock, and read fantasy/short stories.
+    </p>
+  </div>
+</BaseLayout>
