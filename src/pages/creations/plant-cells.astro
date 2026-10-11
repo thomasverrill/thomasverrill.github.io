@@ -5,45 +5,212 @@ import PageNav from "../../components/PageNav.astro";
 
 <BaseLayout
   title="plant cells"
-  description="an animation of plant cells."
+  description="an animation of plant cells with adjustable parameters."
   showHeader={false}
 >
-  <div class="fill-nav">
-    <PageNav
-      items={[
-        { label: "home", href: "/" },
-        { label: "creations", href: "/creations" },
-      ]}
-    />
-  </div>
+  <PageNav
+    items={[
+      { label: "home", href: "/" },
+      { label: "creations", href: "/creations" },
+    ]}
+  />
 
-  <img class="fill" src="/plant-cells.gif" alt="animated grid of green plant cells" />
+  <h1>plant cells</h1>
+
+  <canvas id="cells" class="cells" role="img" aria-label="animated grid of plant cells"></canvas>
+
+  <form id="controls" class="controls">
+    <label for="numVert">vertical lines</label>
+    <input id="numVert" type="range" min="1" max="20" step="1" />
+    <output for="numVert"></output>
+
+    <label for="numHoriz">horizontal lines</label>
+    <input id="numHoriz" type="range" min="1" max="20" step="1" />
+    <output for="numHoriz"></output>
+
+    <label for="minGap">min gap</label>
+    <input id="minGap" type="range" min="80" step="1" />
+    <output for="minGap"></output>
+
+    <label for="filletRadius">corner radius</label>
+    <input id="filletRadius" type="range" min="0" max="150" step="1" />
+    <output for="filletRadius"></output>
+
+    <label for="nCopies">copies</label>
+    <input id="nCopies" type="range" min="1" max="15" step="1" />
+    <output for="nCopies"></output>
+
+    <label for="spacingPower">spacing power</label>
+    <input id="spacingPower" type="range" min="0.01" max="5" step="0.01" />
+    <input
+      id="spacingPowerValue"
+      type="number"
+      min="0.01"
+      max="5"
+      step="0.01"
+      aria-label="spacing power value"
+    />
+
+    <label for="hue">color</label>
+    <input id="hue" type="range" min="0" max="360" step="1" />
+    <output for="hue"></output>
+
+    <label for="oscDistance">movement</label>
+    <input id="oscDistance" type="range" min="0" step="1" />
+    <output for="oscDistance"></output>
+
+    <div class="buttons">
+      <button id="newLayout" type="button">new layout</button>
+      <button type="reset">reset</button>
+    </div>
+  </form>
 </BaseLayout>
 
 <style>
-  .fill {
-    position: fixed;
-    inset: 0;
+  .cells {
+    display: block;
     width: 100%;
-    height: 100%;
-    object-fit: fill;
+    aspect-ratio: 1;
   }
 
-  .fill-nav {
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    z-index: 1;
+  .controls {
+    display: grid;
+    grid-template-columns: max-content 1fr 4.5rem;
+    gap: 0.5rem 0.85rem;
+    align-items: center;
+    margin-top: 1.5rem;
+    color: var(--text-soft);
+    font-size: 0.94rem;
   }
 
-  .fill-nav :global(.page-nav) {
+  .controls input[type="range"] {
+    width: 100%;
+    min-width: 0;
     margin: 0;
-    padding: 0;
-    border: 0;
-    color: #000;
+    accent-color: var(--link);
   }
 
-  .fill-nav :global(.page-nav a:hover) {
-    color: #000;
+  .controls output {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .controls input[type="number"],
+  .controls button {
+    padding: 0.15rem 0.4rem;
+    border: 1px solid var(--rule);
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+  }
+
+  .controls input[type="number"] {
+    width: 100%;
+  }
+
+  .controls button {
+    cursor: pointer;
+  }
+
+  .controls button:hover {
+    color: var(--text-strong);
+  }
+
+  .buttons {
+    display: flex;
+    gap: 0.85rem;
+    grid-column: 1 / -1;
+    margin-top: 0.5rem;
   }
 </style>
+
+<script>
+  import {
+    SIZE,
+    FPS,
+    FRAMES,
+    defaults,
+    maxMinGap,
+    maxOscDistance,
+    newLayout,
+    drawFrame,
+  } from "../../scripts/plant-cells.js";
+
+  const canvas = document.getElementById("cells");
+  const form = document.getElementById("controls");
+  const ctx = canvas.getContext("2d");
+  const sliders = Object.fromEntries(Object.keys(defaults).map((name) => [name, document.getElementById(name)]));
+  const powerValue = document.getElementById("spacingPowerValue");
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  let layout = newLayout();
+  let params = { ...defaults };
+  let dirty = true;
+  let lastFrame = -1;
+
+  function sync() {
+    // a slider bounded by the ones above it follows its new maximum down
+    sliders.minGap.max = maxMinGap(Number(sliders.numVert.value), Number(sliders.numHoriz.value));
+    sliders.oscDistance.max = maxOscDistance(Number(sliders.minGap.value));
+
+    for (const [name, slider] of Object.entries(sliders)) {
+      params[name] = Number(slider.value);
+      const output = form.querySelector(`output[for="${name}"]`);
+      if (output) output.value = slider.value;
+    }
+    if (document.activeElement !== powerValue) powerValue.value = sliders.spacingPower.value;
+    dirty = true;
+  }
+
+  function reset() {
+    // the two bounded sliders need room for their defaults before they are set
+    sliders.minGap.max = maxMinGap(defaults.numVert, defaults.numHoriz);
+    sliders.oscDistance.max = maxOscDistance(defaults.minGap);
+    for (const [name, slider] of Object.entries(sliders)) slider.value = defaults[name];
+    sync();
+  }
+
+  function resize() {
+    const side = Math.max(1, Math.round(canvas.clientWidth * (window.devicePixelRatio || 1)));
+    if (canvas.width === side && canvas.height === side) return;
+    canvas.width = side;
+    canvas.height = side;
+    dirty = true;
+  }
+
+  function tick(now) {
+    const frame = still.matches ? 0 : Math.floor((now / 1000) * FPS) % FRAMES;
+    if (dirty || frame !== lastFrame) {
+      ctx.setTransform(canvas.width / SIZE, 0, 0, canvas.height / SIZE, 0, 0);
+      drawFrame(ctx, params, layout, frame);
+      dirty = false;
+      lastFrame = frame;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  form.addEventListener("input", (event) => {
+    if (event.target === powerValue) {
+      // typed values only count once they are a number inside the slider's range
+      const typed = Number(powerValue.value);
+      if (powerValue.value === "" || !Number.isFinite(typed)) return;
+      sliders.spacingPower.value = Math.min(5, Math.max(0.01, typed));
+    }
+    sync();
+  });
+  powerValue.addEventListener("blur", sync);
+  form.addEventListener("submit", (event) => event.preventDefault());
+  form.addEventListener("reset", (event) => {
+    event.preventDefault();
+    reset();
+  });
+  document.getElementById("newLayout").addEventListener("click", () => {
+    layout = newLayout();
+    dirty = true;
+  });
+
+  new ResizeObserver(resize).observe(canvas);
+  reset();
+  resize();
+  requestAnimationFrame(tick);
+</script>
