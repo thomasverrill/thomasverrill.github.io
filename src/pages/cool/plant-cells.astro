@@ -1,0 +1,49 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageNav from "../../components/PageNav.astro";
+---
+
+<BaseLayout
+  title="plant cells"
+  description="an animation of plant cells."
+  showHeader={false}
+>
+  <div class="fill-nav">
+    <PageNav
+      items={[
+        { label: "home", href: "/" },
+        { label: "cool", href: "/cool" },
+      ]}
+    />
+  </div>
+
+  <img class="fill" src="/plant-cells.gif" alt="animated grid of green plant cells" />
+</BaseLayout>
+
+<style>
+  .fill {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .fill-nav {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1;
+  }
+
+  .fill-nav :global(.page-nav) {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: #000;
+  }
+
+  .fill-nav :global(.page-nav a:hover) {
+    color: #000;
+  }
+</style>

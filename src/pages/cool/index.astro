@@ -1,0 +1,19 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageNav from "../../components/PageNav.astro";
+---
+
+<BaseLayout
+  title="cool"
+  description="cool things from thomas verrill."
+  showHeader={false}
+>
+  <PageNav
+    items={[
+      { label: "home", href: "/" },
+      { label: "plant cells", href: "/cool/plant-cells" },
+    ]}
+  />
+
+  <h1>cool</h1>
+</BaseLayout>
