@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Local-only form for adding an entry to src/pages/things-to-do.astro.
+// Local-only form for adding an entry to src/pages/recommendations.astro.
 // Not part of the deployed site — run with `npm run add-entry`, fill in
 // the form at http://localhost:4322, review the resulting diff, and
 // commit as usual.
@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const TARGET = path.resolve(__dirname, "../src/pages/things-to-do.astro");
+const TARGET = path.resolve(__dirname, "../src/pages/recommendations.astro");
 const PORT = 4322;
 
 function escapeHtml(str) {
@@ -241,7 +241,7 @@ const server = createServer(async (req, res) => {
       res.writeHead(200, { "content-type": "text/html" });
       res.end(
         await formPage(
-          `<p class="ok">added "${escapeHtml(title.toLowerCase())}" to ${created ? "new" : "existing"} section #${id}. review with <code>git diff src/pages/things-to-do.astro</code>, then commit.</p>`,
+          `<p class="ok">added "${escapeHtml(title.toLowerCase())}" to ${created ? "new" : "existing"} section #${id}. review with <code>git diff src/pages/recommendations.astro</code>, then commit.</p>`,
         ),
       );
       return;

@@ -7,24 +7,8 @@ const navItems = [
     href: "https://www.linkedin.com/in/thomas-verrill/",
     external: true,
   },
-  { label: "quantum", href: "/quantum" },
-  { label: "music", href: "/music" },
   { label: "recommendations", href: "/recommendations" },
-  { label: "things to do", href: "/things-to-do" },
-  { label: "projects", href: "/projects" },
 ];
 ---
 
-<BaseLayout navItems={navItems}>
-  <div class="intro">
-    <p>
-      hi! i'm thomas verrill, a quantum engineer at <a href="https://www.rigetti.com/">rigetti computing</a> designing chips for superconducting quantum computers.
-      i previously researched qubit coherence in <a href="https://houcklab.princeton.edu/">andrew houck's lab</a> at princeton university, where
-      i received an undergraduate and masters degree in electrical and computer engineering. 
-    </p>
-    <p>
-      outside of that, i like to make music on guitar/trombone/computer, listen to jazz/experimental
-      rock, and read fantasy/short stories.
-    </p>
-  </div>
-</BaseLayout>
+<BaseLayout navItems={navItems} />
